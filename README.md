@@ -2,5 +2,6 @@
 algorithm application case collection
 
 ## Collection
-| Case | Algorithm | Language | Description |
+| Case | Algorithm | Description | Code |
 | --- | --- | --- | --- |
+| 华容道 | BFS | [HuaRongDao](huarongdao/README.md) | [HuaRongDao](HuaRongDao.java)

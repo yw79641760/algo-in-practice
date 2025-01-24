@@ -1,0 +1,24 @@
+# Compiled class files
+*.class
+
+# IDE specific files
+.idea/
+*.iml
+*.ipr
+*.iws
+.vscode/
+
+# Build output
+target/
+bin/
+out/
+
+# Logs and temp files
+*.log
+*.tmp
+*.swp
+*.swo
+
+# System files
+.DS_Store
+Thumbs.db
