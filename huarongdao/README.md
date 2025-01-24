@@ -1,54 +1,63 @@
-# 华容道求解器
+# 华容道游戏
 
-本Java程序使用广度优先搜索算法解决经典华容道拼图。
+## 游戏规则
 
-## 拼图描述
-华容道是一种滑块拼图，目标是将最大的方块（曹操）移动到棋盘的左下角。拼图包含：
-- 1个 2x2 方块（曹操）
-- 2个 2x1 方块（张飞）
-- 1个 1x2 方块（关羽）
-- 4个 1x1 方块（士兵）
+华容道是中国传统的滑块类益智游戏，目标是将曹操从出口移出。
 
-## 算法概述
-求解器采用广度优先搜索（BFS）算法：
-1. **初始化**：从初始棋盘配置开始
-2. **状态表示**：每个棋盘状态用二维数组表示
-3. **移动生成**：为每个状态生成所有可能的有效移动
-4. **状态跟踪**：使用队列管理状态，集合记录已访问状态
-5. **目标检查**：检查曹操是否到达左下角
-6. **解决方案路径**：记录并显示移动序列
+### 棋盘布局
+- 棋盘大小：5行4列
+- 棋子类型：
+  - 曹操 (2x2)
+  - 张飞 (2x1)
+  - 关羽 (1x2)
+  - 马超 (2x1)
+  - 赵云 (2x1)
+  - 黄忠 (2x1)
+  - 小兵 (1x1)
 
-## Implementation Details
-- **Board Representation**: 4x5 grid with integer codes for each piece
-- **Piece Types**: 
-  - 0: Empty
-  - 1: CaoCao (2x2)
-  - 2: ZhangFei (2x1)
-  - 3: GuanYu (1x2)
-  - 4: Soldier (1x1)
-- **Move Validation**: 
-  - Checks piece boundaries
-  - Ensures moves stay within board limits
-  - Validates piece integrity during movement
+### 胜利条件
+曹操需要完全移动到棋盘最后两行的中间两列位置，即：
+- 第4行第2列
+- 第4行第3列
+- 第5行第2列
+- 第5行第3列
 
-## Key Methods
-- `move()`: Generates new board states by moving pieces
-- `isGoal()`: Checks if CaoCao is in the target position
-- `solve()`: Implements the BFS algorithm
-- `getMoveDescription()`: Creates human-readable move descriptions
+## 游戏玩法
 
-## Usage
-Compile and run the program:
+1. 运行游戏：
 ```bash
 javac huarongdao/HuaRongDao.java
-java -cp . huarongdao.HuaRongDao
+java huarongdao.HuaRongDao
 ```
 
-The program will output:
-1. Sequence of moves to solve the puzzle
-2. Final board configuration
+2. 游戏会自动寻找解决方案
 
-## Optimization
-- Uses BFS to guarantee the shortest solution
-- Maintains a visited set to avoid redundant states
-- Efficient board cloning and state comparison
+3. 解决方案将显示：
+   - 每一步的移动步骤
+   - 最终棋盘状态
+
+## 代码说明
+
+### 主要类
+- `HuaRongDao`：主游戏类，包含游戏逻辑
+
+### 主要方法
+- `isGoal()`：判断是否达到胜利条件
+- `move()`：处理棋子移动
+- `solve()`：使用BFS算法寻找解决方案
+
+## 初始布局
+
+```java
+int[][] initialBoard = {
+    {CAOCAO, CAOCAO, ZHANGFEI, EMPTY},
+    {CAOCAO, CAOCAO, ZHANGFEI, EMPTY},
+    {MACHUO, MACHUO, SOLDIER, SOLDIER},
+    {GUANYU, GUANYU, SOLDIER, SOLDIER},
+    {EMPTY, EMPTY, EMPTY, EMPTY}
+};
+```
+
+## 注意事项
+- 如果显示"No solution found"，请检查初始布局是否正确
+- 确保所有棋子尺寸和位置符合规则
