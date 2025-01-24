@@ -9,11 +9,14 @@ class HuaRongDao {
     private static final int CAOCAO = 1;  // 曹操 2x2
     private static final int ZHANGFEI = 2; // 张飞 2x1
     private static final int GUANYU = 3;  // 关羽 1x2
-    private static final int SOLDIER = 4; // 小兵 1x1
+    private static final int MACHUO = 4;  // 马超 2x1
+    private static final int ZHAOYUN = 5; // 赵云 2x1
+    private static final int HUANGZHONG = 6; // 黄忠 2x1
+    private static final int SOLDIER = 7; // 小兵 1x1
 
     // 棋盘大小
-    private static final int ROWS = 4;
-    private static final int COLS = 5;
+    private static final int ROWS = 5;
+    private static final int COLS = 4;
 
     // 棋盘表示
     private int[][] board;
@@ -23,8 +26,11 @@ class HuaRongDao {
     }
 
     private boolean isGoal(int[][] board) {
-        // 目标位置是最后一行的第一列
-        return board[ROWS - 1][0] == CAOCAO;
+        // 曹操需要完全位于出口位置（最后两行的中间两列）
+        return board[ROWS - 2][1] == CAOCAO && 
+               board[ROWS - 2][2] == CAOCAO &&
+               board[ROWS - 1][1] == CAOCAO &&
+               board[ROWS - 1][2] == CAOCAO;
     }
 
     // 棋子尺寸
@@ -33,6 +39,9 @@ class HuaRongDao {
         {2, 2}, // CAOCAO
         {2, 1}, // ZHANGFEI
         {1, 2}, // GUANYU
+        {2, 1}, // MACHUO
+        {2, 1}, // ZHAOYUN
+        {2, 1}, // HUANGZHONG
         {1, 1}  // SOLDIER
     };
 
@@ -59,24 +68,28 @@ class HuaRongDao {
         // 检查移动是否合法
         if (rowDir != 0) { // 上下移动
             // 检查新位置是否在边界内
-            if (newRow + size[0] - 1 >= ROWS) {
+            if (newRow < 0 || newRow + size[0] - 1 >= ROWS) {
                 return null;
             }
-            // 宽棋子需要检查整列
-            for (int i = 0; i < size[1]; i++) {
-                if (newCol + i >= COLS || board[newRow][newCol + i] != piece) {
-                    return null;
+            // 检查整个棋子区域
+            for (int i = 0; i < size[0]; i++) {
+                for (int j = 0; j < size[1]; j++) {
+                    if (newCol + j >= COLS || board[newRow + i][newCol + j] != piece) {
+                        return null;
+                    }
                 }
             }
         } else { // 左右移动
             // 检查新位置是否在边界内
-            if (newCol + size[1] - 1 >= COLS) {
+            if (newCol < 0 || newCol + size[1] - 1 >= COLS) {
                 return null;
             }
-            // 高棋子需要检查整行
+            // 检查整个棋子区域
             for (int i = 0; i < size[0]; i++) {
-                if (newRow + i >= ROWS || board[newRow + i][newCol] != piece) {
-                    return null;
+                for (int j = 0; j < size[1]; j++) {
+                    if (newRow + i >= ROWS || board[newRow + i][newCol + j] != piece) {
+                        return null;
+                    }
                 }
             }
         }
@@ -183,6 +196,9 @@ class HuaRongDao {
             case CAOCAO: return "CaoCao";
             case ZHANGFEI: return "ZhangFei";
             case GUANYU: return "GuanYu";
+            case MACHUO: return "MaChuo";
+            case ZHAOYUN: return "ZhaoYun";
+            case HUANGZHONG: return "HuangZhong";
             case SOLDIER: return "Soldier";
             case EMPTY: return "Empty";
             default: return "Unknown";
@@ -207,12 +223,13 @@ class HuaRongDao {
     }
 
     public static void main(String[] args) {
-        // 标准华容道初始布局
+        // 经典可解的4列华容道初始布局
         int[][] initialBoard = {
-            {CAOCAO, CAOCAO, ZHANGFEI, ZHANGFEI, GUANYU},
-            {CAOCAO, CAOCAO, ZHANGFEI, ZHANGFEI, GUANYU},
-            {SOLDIER, SOLDIER, SOLDIER, SOLDIER, EMPTY},
-            {SOLDIER, SOLDIER, SOLDIER, SOLDIER, EMPTY}
+            {CAOCAO, CAOCAO, ZHANGFEI, EMPTY},
+            {CAOCAO, CAOCAO, ZHANGFEI, EMPTY},
+            {MACHUO, MACHUO, SOLDIER, SOLDIER},
+            {GUANYU, GUANYU, SOLDIER, SOLDIER},
+            {EMPTY, EMPTY, EMPTY, EMPTY}
         };
 
         HuaRongDao game = new HuaRongDao(initialBoard);
